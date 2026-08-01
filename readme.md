@@ -4,15 +4,15 @@ This program detects duplicate files within your file system. It first scans the
 
 # Example Result
 > -----------------------------------------------------------
->[RESULT] -> 	Files listed below have the same content
->		/Users/florianluebke/Desktop/stuff//lexer-cpp/flex-lexer/cmake-build-debug/CMakeFiles/clion-environment.txt
->		/Users/florianluebke/Desktop/stuff//Lexer cpp/cmake-build-debug/CMakeFiles/clion-environment.txt
->
->-----------------------------------------------------------
->[RESULT] -> 	Files listed below have the same content
->		/Users/florianluebke/Desktop/stuff//lexer-cpp/flex-lexer/cmake-build-debug/CMakeFiles/cmake.check_cache
->		/Users/florianluebke/Desktop/stuff//Lexer cpp/cmake-build-debug/CMakeFiles/cmake.check_cache
->		...
+>[RESULT] -> 	Files listed below have the same content\n
+>\t\t		/Users/florianluebke/Desktop/stuff//lexer-cpp/flex-lexer/cmake-build-debug/CMakeFiles/clion-environment.txt\n
+>\t\t		/Users/florianluebke/Desktop/stuff//Lexer cpp/cmake-build-debug/CMakeFiles/clion-environment.txt\n
+>\n
+>-----------------------------------------------------------\n
+>[RESULT] -> 	Files listed below have the same content\n
+>\t\t		/Users/florianluebke/Desktop/stuff//lexer-cpp/flex-lexer/cmake-build-debug/CMakeFiles/cmake.check_cache\n
+>\t\t		/Users/florianluebke/Desktop/stuff//Lexer cpp/cmake-build-debug/CMakeFiles/cmake.check_cache\n
+>\t\t		...
 
 
 [RESULT] -> 	Files listed below have the same content
