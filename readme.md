@@ -109,14 +109,14 @@ Example:
 
 ---
 
-
->Example usage:\tmain.go [args, optional] [filepath to start from]\n\n")
->'-help' for this help overview; \t\t\tmain.go -help\n")
->'-log' for enabling detailed logging; \t\t\tmain.go -log\n")
->'-perf' for enabling performance measurement; \t\tmain.go -perf\n")
->'-pretty' for enabling pretty output of results; \tmain.go -pretty\n")
->'-info' for enabling information about collection; \tmain.go -info\n")
-
+```bash
+Example usage:\tmain.go [args, optional] [filepath to start from]\n\n")
+'-help' for this help overview; \t\t\tmain.go -help\n")
+'-log' for enabling detailed logging; \t\t\tmain.go -log\n")
+'-perf' for enabling performance measurement; \t\tmain.go -perf\n")
+'-pretty' for enabling pretty output of results; \tmain.go -pretty\n")
+'-info' for enabling information about collection; \tmain.go -info\n")
+```
 ---
 
 ## License
