@@ -10,45 +10,58 @@ import (
 const EMPTY_FILE_HASH string = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 type FileFinder struct {
-	startFolder          string
-	filesToBeHashed      []string
-	folderStack          Stack
 	duplicateFilesResult Result
+	folderStack          Stack
+	duplicates           [][]string
+	filesToBeHashed      []string
+	startFolder          string
 	enableLogs           bool
 	pretty               bool
+	info                 bool
 }
 
 // TODO: Add docstrings
 // TODO: Add errorhandling
-// TODO: Add logging
 // TODO: Add performance measurement
-func (ff *FileFinder) Initialize(startfolder string, enableLogs bool, enablePerfMeasurement bool, pretty bool) {
+func (ff *FileFinder) Initialize(startfolder string, enableLogs bool, enablePerfMeasurement bool, pretty bool, info bool) error {
 
 	ff.enableLogs = enableLogs
 	ff.pretty = pretty
-	if ff.enableLogs {
-		log.Printf("[LOG]\tInitializing Finder.")
-	}
+	ff.info = info
 	ff.startFolder = startfolder
-	content, _ := os.ReadDir(ff.startFolder)
+
+	if ff.enableLogs {
+		log.Printf("[LOG]\tInitializing 'Finder'. Startfolder is: '%v'.", ff.startFolder)
+	}
+	content, err := os.ReadDir(ff.startFolder)
+
+	if err != nil {
+		if ff.enableLogs {
+			log.Printf("[LOG]\tCan not open startfolder '%v'.", ff.startFolder)
+		}
+		return fmt.Errorf("[ERROR] Can not open startfolder. Please provide other folder. Err: %v", err)
+	}
 
 	f := Folder{ff.startFolder, "", content, false}
 	ff.filesToBeHashed = []string{}
 	ff.folderStack = Stack{}
+
 	ff.duplicateFilesResult = Result{}
 	ff.duplicateFilesResult.init()
 	ff.folderStack.Push(f)
 
 	if ff.enableLogs {
-		log.Printf("[LOG]\tInitialization of Finder successful.")
+		log.Printf("[LOG]\tInitialization of 'Finder' successful.")
 	}
+
+	return nil
 
 }
 
 // TODO: Add proper error handling
 func (ff *FileFinder) collectAllFiles() {
 	if ff.enableLogs {
-		log.Printf("[LOG]\tStart collecting relevant files.")
+		log.Printf("[LOG]\tStart collecting relevant files...")
 	}
 
 	for !ff.folderStack.IsEmpty() {
@@ -71,10 +84,6 @@ func (ff *FileFinder) collectAllFiles() {
 
 }
 
-func createResult() {
-
-}
-
 func (ff *FileFinder) FindDuplicates() {
 
 	ff.collectAllFiles()
@@ -92,35 +101,14 @@ func (ff *FileFinder) FindDuplicates() {
 		}
 
 		ff.duplicateFilesResult.Add(fileHash, relevantFile)
-
 	}
 	if ff.enableLogs {
 		log.Printf("[LOG]\tSuccessfully collected duplicates.")
 	}
+	ff.collectDuplicates()
 }
 
-func (ff *FileFinder) PrintResults() {
-	if ff.pretty {
-
-		ff.PrettyPrintResult()
-
-	} else {
-		fmt.Println(ff.GetDuplicates())
-
-	}
-}
-
-func (ff *FileFinder) PrettifyResult() {
-	if len(ff.filesToBeHashed) == 0 {
-		fmt.Printf("[WARNING]: No files are hashed, thus no result.")
-		return
-	}
-
-	ff.PrettyPrintResult()
-	ff.information()
-}
-
-func (ff *FileFinder) GetDuplicates() [][]string {
+func (ff *FileFinder) collectDuplicates() {
 
 	var duplicateContent [][]string
 
@@ -130,14 +118,26 @@ func (ff *FileFinder) GetDuplicates() [][]string {
 			duplicateContent = append(duplicateContent, file.filePaths)
 		}
 	}
-	return duplicateContent
+	ff.duplicates = duplicateContent
 }
 
-func (ff *FileFinder) PrettyPrintResult() {
+func (ff *FileFinder) PrintResults() {
+	if len(ff.filesToBeHashed) == 0 {
+		fmt.Printf("[WARNING]: No files are hashed, thus no result.")
+		return
+	}
 
-	f := ff.GetDuplicates()
+	if ff.pretty {
+		ff.prettifyResults()
+	} else {
+		fmt.Println(ff.duplicates)
+	}
+	ff.printInformation()
+}
 
-	for _, dups := range f {
+func (ff *FileFinder) prettifyResults() {
+
+	for _, dups := range ff.duplicates {
 
 		var resultString string
 
@@ -149,7 +149,10 @@ func (ff *FileFinder) PrettyPrintResult() {
 	}
 }
 
-func (ff *FileFinder) information() {
+func (ff *FileFinder) printInformation() {
+	if !ff.info {
+		return
+	}
 	fmt.Printf("-----------------------------------------------------------\n")
 	fmt.Printf("[INFORMATION] Files equality is considered based on hashed file content.\n")
 	fmt.Printf("[INFORMATION] Path of files with same hash ( thus same content ) is returned as single result.\n")
