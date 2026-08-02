@@ -14,14 +14,21 @@ type FileFinder struct {
 	filesToBeHashed      []string
 	folderStack          Stack
 	duplicateFilesResult Result
+	enableLogs           bool
+	pretty               bool
 }
 
-// TOD0: Add docstrings
-// TOD0: Add errorhandling
-// TOD0: Add logging
-func (ff *FileFinder) Initialize(startfolder string) {
+// TODO: Add docstrings
+// TODO: Add errorhandling
+// TODO: Add logging
+// TODO: Add performance measurement
+func (ff *FileFinder) Initialize(startfolder string, enableLogs bool, enablePerfMeasurement bool, pretty bool) {
 
-	log.Printf("[LOG]\tInitializing Finder.")
+	ff.enableLogs = enableLogs
+	ff.pretty = pretty
+	if ff.enableLogs {
+		log.Printf("[LOG]\tInitializing Finder.")
+	}
 	ff.startFolder = startfolder
 	content, _ := os.ReadDir(ff.startFolder)
 
@@ -31,14 +38,18 @@ func (ff *FileFinder) Initialize(startfolder string) {
 	ff.duplicateFilesResult = Result{}
 	ff.duplicateFilesResult.init()
 	ff.folderStack.Push(f)
-	log.Printf("[LOG]\tInitialization of Finder successful.")
+
+	if ff.enableLogs {
+		log.Printf("[LOG]\tInitialization of Finder successful.")
+	}
 
 }
 
 // TODO: Add proper error handling
 func (ff *FileFinder) collectAllFiles() {
-
-	log.Printf("[LOG]\tStart collecting relevant files.")
+	if ff.enableLogs {
+		log.Printf("[LOG]\tStart collecting relevant files.")
+	}
 
 	for !ff.folderStack.IsEmpty() {
 		currentFolder, err := ff.folderStack.Pop()
@@ -53,7 +64,10 @@ func (ff *FileFinder) collectAllFiles() {
 
 		currentFolder.extractFilesAndFolders(&ff.folderStack, &ff.filesToBeHashed)
 	}
-	log.Printf("[LOG]\tFinished collecting relevant files.")
+
+	if ff.enableLogs {
+		log.Printf("[LOG]\tFinished collecting relevant files.")
+	}
 
 }
 
@@ -61,10 +75,12 @@ func createResult() {
 
 }
 
-func (ff *FileFinder) FindDuplicates() [][]string {
+func (ff *FileFinder) FindDuplicates() {
 
 	ff.collectAllFiles()
-	log.Printf("[LOG]\tStart looking for duplicates.")
+	if ff.enableLogs {
+		log.Printf("[LOG]\tStart looking for duplicates.")
+	}
 
 	// TODO: Add Result struct for easier analysis
 	for _, relevantFile := range ff.filesToBeHashed {
@@ -78,10 +94,20 @@ func (ff *FileFinder) FindDuplicates() [][]string {
 		ff.duplicateFilesResult.Add(fileHash, relevantFile)
 
 	}
+	if ff.enableLogs {
+		log.Printf("[LOG]\tSuccessfully collected duplicates.")
+	}
+}
 
-	log.Printf("[LOG]\tSuccessfully collected duplicates.")
+func (ff *FileFinder) PrintResults() {
+	if ff.pretty {
 
-	return ff.duplicateFilesResult.GetDuplicates()
+		ff.PrettyPrintResult()
+
+	} else {
+		fmt.Println(ff.GetDuplicates())
+
+	}
 }
 
 func (ff *FileFinder) PrettifyResult() {
@@ -90,8 +116,37 @@ func (ff *FileFinder) PrettifyResult() {
 		return
 	}
 
-	ff.duplicateFilesResult.PrettyPrintResult()
+	ff.PrettyPrintResult()
 	ff.information()
+}
+
+func (ff *FileFinder) GetDuplicates() [][]string {
+
+	var duplicateContent [][]string
+
+	for _, file := range ff.duplicateFilesResult.FilesPerHash {
+
+		if file.fileContentHasDuplicates {
+			duplicateContent = append(duplicateContent, file.filePaths)
+		}
+	}
+	return duplicateContent
+}
+
+func (ff *FileFinder) PrettyPrintResult() {
+
+	f := ff.GetDuplicates()
+
+	for _, dups := range f {
+
+		var resultString string
+
+		for _, filePath := range dups {
+			resultString = resultString + fmt.Sprintf("\t\t%v\n", filePath)
+		}
+		fmt.Printf("-----------------------------------------------------------\n")
+		fmt.Printf("[RESULT] -> \tFiles listed below have the same content\n%v\n", resultString)
+	}
 }
 
 func (ff *FileFinder) information() {
