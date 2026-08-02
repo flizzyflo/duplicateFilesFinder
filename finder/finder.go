@@ -102,10 +102,12 @@ func (ff *FileFinder) FindDuplicates() {
 
 		ff.duplicateFilesResult.Add(fileHash, relevantFile)
 	}
+
+	ff.collectDuplicates()
+
 	if ff.enableLogs {
 		log.Printf("[LOG]\tSuccessfully collected duplicates.")
 	}
-	ff.collectDuplicates()
 }
 
 func (ff *FileFinder) collectDuplicates() {
