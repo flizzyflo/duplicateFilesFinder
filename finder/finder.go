@@ -20,6 +20,11 @@ type FileFinder struct {
 	info                 bool
 }
 
+func (ff *FileFinder) Run() {
+	ff.findDuplicates()
+	ff.printResults()
+}
+
 // TODO: Add docstrings
 // TODO: Add errorhandling
 // TODO: Add performance measurement
@@ -84,7 +89,7 @@ func (ff *FileFinder) collectAllFiles() {
 
 }
 
-func (ff *FileFinder) FindDuplicates() {
+func (ff *FileFinder) findDuplicates() {
 
 	ff.collectAllFiles()
 	if ff.enableLogs {
@@ -123,7 +128,7 @@ func (ff *FileFinder) collectDuplicates() {
 	ff.duplicates = duplicateContent
 }
 
-func (ff *FileFinder) PrintResults() {
+func (ff *FileFinder) printResults() {
 	if len(ff.filesToBeHashed) == 0 {
 		fmt.Printf("[WARNING]: No files are hashed, thus no result.")
 		return

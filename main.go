@@ -35,6 +35,5 @@ func main() {
 	f := finder.FileFinder{}
 
 	f.Initialize(path, log, perf, pretty, info)
-	f.FindDuplicates()
-	f.PrintResults()
+	f.Run()
 }
