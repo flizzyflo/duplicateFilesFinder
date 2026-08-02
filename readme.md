@@ -110,12 +110,13 @@ Example:
 ---
 
 ```bash
-Example usage:\tmain.go [args, optional] [filepath to start from]")
-'-help' for help overview;                          main.go -help")
-'-log' for enabling detailed logging;               main.go -log")
-'-perf' for enabling performance measurement;       main.go -perf")
-'-pretty' for enabling pretty output of results;    main.go -pretty")
-'-info' for enabling information about collection;  main.go -info")
+Example usage from bash: 
+main.go [args, optional] [filepath to start from]"
+'-help' for help overview;                          main.go -help"
+'-log' for enabling detailed logging;               main.go -log"
+'-perf' for enabling performance measurement;       main.go -perf"
+'-pretty' for enabling pretty output of results;    main.go -pretty"
+'-info' for enabling information about collection;  main.go -info"
 ```
 ---
 
