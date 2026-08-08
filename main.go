@@ -11,7 +11,7 @@ import (
 // -perf for performance measures
 func main() {
 
-	if len(os.Args) < 1 {
+	if len(os.Args) < finder.NO_OWN_ARG {
 		s := fmt.Errorf("[ERROR]: Not provided enough arguments")
 		fmt.Println(s)
 		finder.Usage()
