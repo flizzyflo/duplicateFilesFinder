@@ -11,7 +11,7 @@ type FilesPerHash struct {
 func (hf *FilesPerHash) Append(hash string, filepath string) {
 	hf.filePaths = append(hf.filePaths, filepath)
 	hf.fileCount++
-	hf.fileContentHasDuplicates = len(hf.filePaths) > 1
+	hf.fileContentHasDuplicates = len(hf.filePaths) > NO_DUPLICATES
 	hf.fileContentHash = hash
 
 }

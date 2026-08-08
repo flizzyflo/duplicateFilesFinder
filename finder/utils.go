@@ -4,6 +4,7 @@ import "fmt"
 
 const START_FOLDER string = "/."
 const NO_OWN_ARG int = 2
+const NO_DUPLICATES int = 1
 
 func Usage() {
 	fmt.Printf("\n[INFO]\tYou can provide several arguments to this function.\n")
