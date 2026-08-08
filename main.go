@@ -32,6 +32,14 @@ func main() {
 	info = slices.Contains(curArgs, "-info")
 
 	path := curArgs[len(curArgs)-1]
+
+	if path[0] == '-' {
+		s := fmt.Errorf("[ERROR]: Missing path to start search from. Only provided config args: '[%+v]'", curArgs)
+		fmt.Println(s)
+		finder.Usage()
+		return
+	}
+
 	f := finder.FileFinder{}
 
 	f.Initialize(path, log, perf, pretty, info)

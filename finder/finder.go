@@ -152,7 +152,7 @@ func (ff *FileFinder) prettifyResults() {
 			resultString = resultString + fmt.Sprintf("\t\t%v\n", filePath)
 		}
 		fmt.Printf("-----------------------------------------------------------\n")
-		fmt.Printf("[RESULT] -> \tFiles listed below have the same content\n%v\n", resultString)
+		fmt.Printf("[RESULT] -> \tFiles listed below contain the same information\n%v\n", resultString)
 	}
 }
 
@@ -161,7 +161,7 @@ func (ff *FileFinder) printInformation() {
 		return
 	}
 	fmt.Printf("-----------------------------------------------------------\n")
-	fmt.Printf("[INFORMATION] Files equality is considered based on hashed file content.\n")
-	fmt.Printf("[INFORMATION] Path of files with same hash ( thus same content ) is returned as single result.\n")
+	fmt.Printf("[INFORMATION] File equality is considered based on hashed file content.\n")
+	fmt.Printf("[INFORMATION] Path of files with same hash ( thus same content ) is returned as a grouped result block, containing single results.\n")
 	fmt.Printf("-----------------------------------------------------------\n")
 }
