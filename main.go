@@ -33,6 +33,7 @@ func main() {
 
 	path := curArgs[len(curArgs)-1]
 
+	// position where path is expected is control arg
 	if path[0] == '-' {
 		s := fmt.Errorf("[ERROR]: Missing path to start search from. Only provided config args: '[%+v]'", curArgs)
 		fmt.Println(s)
