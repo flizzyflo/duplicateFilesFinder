@@ -10,20 +10,26 @@ import (
 const EMPTY_FILE_HASH string = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 type FileFinder struct {
-	duplicateFilesResult Result
-	folderStack          Stack
-	performanceTracker   PerformanceTracker
-	duplicates           [][]string
-	filesToBeHashed      []string
-	startFolder          string
-	enableLogs           bool
-	pretty               bool
-	info                 bool
+	duplicateFilesResult  Result
+	folderStack           Stack
+	performanceTracker    PerformanceTracker
+	duplicates            [][]string
+	filesToBeHashed       []string
+	startFolder           string
+	enablePerfMeasurement bool
+	enableLogs            bool
+	pretty                bool
+	info                  bool
 }
 
 func (ff *FileFinder) Run() {
 	ff.findDuplicates()
+	ff.performanceTracker.Finish()
 	ff.printResults()
+
+	if ff.enablePerfMeasurement {
+		ff.performanceTracker.Print()
+	}
 }
 
 // TODO: Add docstrings
@@ -31,6 +37,7 @@ func (ff *FileFinder) Run() {
 // TODO: Add performance measurement
 func (ff *FileFinder) Initialize(startfolder string, enableLogs bool, enablePerfMeasurement bool, pretty bool, info bool) error {
 
+	ff.enablePerfMeasurement = enablePerfMeasurement
 	ff.enableLogs = enableLogs
 	ff.pretty = pretty
 	ff.info = info
