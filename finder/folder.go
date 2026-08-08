@@ -7,9 +7,9 @@ import (
 
 const HIDDEN byte = '.'
 
-// TOD0: Add docstrings
-// TOD0: Add errorhandling
-// TOD0: Add logging
+// Folder represents a directory in the file system.
+// It stores the directory's absolute path, its name,
+// its content, and whether it has already been processed.
 type Folder struct {
 	absolutePath   string
 	folderName     string
@@ -17,7 +17,13 @@ type Folder struct {
 	alreadyVisited bool
 }
 
-func (fd *Folder) extractFilesAndFolders(folders *Stack, files *[]string) {
+// CollectFiles traverses the folder's content and separates
+// directories from regular files.
+//
+// Hidden entries, whose names start with '.', are ignored. Subdirectories
+// are added to the provided stack for later traversal, while regular files
+// are appended to the files slice as absolute paths.
+func (fd *Folder) CollectFiles(folders *Stack, files *[]string) {
 	for _, f := range fd.folderContent {
 
 		if f.Name()[0] == HIDDEN {
@@ -26,10 +32,15 @@ func (fd *Folder) extractFilesAndFolders(folders *Stack, files *[]string) {
 
 		absolutePath := fmt.Sprintf("%v/%v", fd.absolutePath, f.Name())
 
-		// TODO: Error handling
 		if f.IsDir() {
 			fd.alreadyVisited = true
-			c, _ := os.ReadDir(absolutePath)
+			c, err := os.ReadDir(absolutePath)
+
+			if err != nil {
+				fmt.Printf("[ERROR]: Error reading path '%s'. Following error occured: %s", absolutePath, err)
+				continue
+			}
+
 			folders.Push(Folder{absolutePath, f.Name(), c, false})
 
 		} else {
