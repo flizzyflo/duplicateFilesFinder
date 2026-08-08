@@ -52,7 +52,7 @@ func (ff *FileFinder) Initialize(startfolder string, enableLogs bool, enablePerf
 	ff.folderStack = Stack{}
 
 	ff.duplicateFilesResult = Result{}
-	ff.duplicateFilesResult.init()
+	ff.duplicateFilesResult.new()
 	ff.folderStack.Push(f)
 
 	if ff.enableLogs {
