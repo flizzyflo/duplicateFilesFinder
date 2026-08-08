@@ -96,7 +96,6 @@ func (ff *FileFinder) findDuplicates() {
 		log.Printf("[LOG]\tStart looking for duplicates.")
 	}
 
-	// TODO: Add Result struct for easier analysis
 	for _, relevantFile := range ff.filesToBeHashed {
 		fileContent, _ := os.ReadFile(relevantFile)
 		fileHash := fmt.Sprintf("%x", sha256.Sum256(fileContent))
