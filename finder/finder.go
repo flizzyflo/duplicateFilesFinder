@@ -80,7 +80,7 @@ func (ff *FileFinder) collectAllFiles() {
 			fmt.Println(err)
 		}
 
-		currentFolder.extractFilesAndFolders(&ff.folderStack, &ff.filesToBeHashed)
+		currentFolder.CollectFiles(&ff.folderStack, &ff.filesToBeHashed)
 	}
 
 	if ff.enableLogs {
