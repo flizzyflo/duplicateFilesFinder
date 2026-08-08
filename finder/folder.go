@@ -23,10 +23,11 @@ type Folder struct {
 // Hidden entries, whose names start with '.', are ignored. Subdirectories
 // are added to the provided stack for later traversal, while regular files
 // are appended to the files slice as absolute paths.
-func (fd *Folder) CollectFiles(folders *Stack, files *[]string) {
+func (fd *Folder) CollectFiles(folders *Stack, files *[]string, perfTracker *PerformanceTracker) {
 	for _, f := range fd.folderContent {
 
 		if f.Name()[0] == HIDDEN {
+			perfTracker.AddHiddenFile()
 			continue
 		}
 
@@ -35,6 +36,7 @@ func (fd *Folder) CollectFiles(folders *Stack, files *[]string) {
 		if f.IsDir() {
 			fd.alreadyVisited = true
 			c, err := os.ReadDir(absolutePath)
+			perfTracker.AddFolder()
 
 			if err != nil {
 				fmt.Printf("[ERROR]: Error reading path '%s'. Following error occured: %s", absolutePath, err)
@@ -45,6 +47,7 @@ func (fd *Folder) CollectFiles(folders *Stack, files *[]string) {
 
 		} else {
 			*files = append(*files, absolutePath)
+			perfTracker.AddFile()
 		}
 	}
 }

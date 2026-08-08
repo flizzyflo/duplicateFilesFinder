@@ -12,6 +12,7 @@ const EMPTY_FILE_HASH string = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934c
 type FileFinder struct {
 	duplicateFilesResult Result
 	folderStack          Stack
+	performanceTracker   PerformanceTracker
 	duplicates           [][]string
 	filesToBeHashed      []string
 	startFolder          string
@@ -38,7 +39,9 @@ func (ff *FileFinder) Initialize(startfolder string, enableLogs bool, enablePerf
 	if ff.enableLogs {
 		log.Printf("[LOG]\tInitializing 'Finder'. Startfolder is: '%v'.", ff.startFolder)
 	}
+	ff.performanceTracker = PerformanceTracker{}
 	content, err := os.ReadDir(ff.startFolder)
+	ff.performanceTracker.Start()
 
 	if err != nil {
 		if ff.enableLogs {
@@ -50,6 +53,7 @@ func (ff *FileFinder) Initialize(startfolder string, enableLogs bool, enablePerf
 	f := Folder{ff.startFolder, "", content, false}
 	ff.filesToBeHashed = []string{}
 	ff.folderStack = Stack{}
+	ff.performanceTracker.AddFolder()
 
 	ff.duplicateFilesResult = Result{}
 	ff.duplicateFilesResult.new()
@@ -79,8 +83,7 @@ func (ff *FileFinder) collectAllFiles() {
 		if err != nil {
 			fmt.Println(err)
 		}
-
-		currentFolder.CollectFiles(&ff.folderStack, &ff.filesToBeHashed)
+		currentFolder.CollectFiles(&ff.folderStack, &ff.filesToBeHashed, &ff.performanceTracker)
 	}
 
 	if ff.enableLogs {
